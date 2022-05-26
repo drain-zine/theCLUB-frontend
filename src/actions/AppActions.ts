@@ -1,9 +1,15 @@
-import { TAPISong, TPlaylistMeta } from "../app.types"
+import { TAPIPlaylist, TAPIPlaylistTracks, TAPISong, TPlaylistMeta } from "../app.types"
 import * as ACTIONS from './types';
 
+// action to cacheSongs on page load
 export const cacheSongs = (songs: TAPISong[]) => {
     return { type: ACTIONS.CACHE_SONGS, songs};
 };
+
+// action to cachePlaylists on page load
+export const cachePlaylists = (playlists: TAPIPlaylist[], playlistTracks: TAPIPlaylistTracks[]) => {
+    return { type: ACTIONS.CACHE_PLAYLISTS, playlists, playlistTracks };
+}
 
 // action creator to create playlist on server
 export const createPlaylist = (meta: TPlaylistMeta, initialTrackId: number) => {

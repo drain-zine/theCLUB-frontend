@@ -51,8 +51,15 @@ export type TAPISong = {
 };
 
 export type TAPIPlaylist = {
+    id: number;
     name: string;
     description: string;
     creationDate: string;
     trackIds: number[];
+}
+
+export type TAPIPlaylistTracks = {
+    id: number;
+    playlistId: number;
+    trackId: number;
 }

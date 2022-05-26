@@ -1,12 +1,13 @@
 import { AnyAction } from 'redux';
 import * as ACTIONS from '../actions/types';
-import { TSong, TPlaylist, TAPISong } from '../app.types';
+import { TSong, TPlaylist, TAPISong, TAPIPlaylist, TAPIPlaylistTracks } from '../app.types';
 
 export interface AppReducerState{
     songs: Record<number, TSong>,
     playlists: Record<number, TPlaylist>, 
 }
 
+// Reducer for our local app cache
 const AppReducer = (baseState = {} as AppReducerState, action: AnyAction): AppReducerState => {
     switch(action.type){
         case ACTIONS.CACHE_SONGS: {
@@ -32,6 +33,29 @@ const AppReducer = (baseState = {} as AppReducerState, action: AnyAction): AppRe
             return{
                 ...baseState,
                 songs: flattendSongs
+            }
+        }
+
+        case ACTIONS.CACHE_PLAYLISTS: {
+            const { playlists, playlistTracks } = action;
+            const flattendPlaylists: Record<number, TPlaylist> = Object.assign({}, ...playlists.map(( playlist: TAPIPlaylist) => {
+                const {id, name, description, creationDate} = playlist;
+                const trackIds = playlistTracks
+                    .filter((playlistTrack: TAPIPlaylistTracks) => playlistTrack.playlistId === id)
+                    .map((filteredPTrack: TAPIPlaylistTracks) => filteredPTrack.trackId);
+                return {
+                    [id]: {
+                        name,
+                        description,
+                        creationDate,
+                        trackIds
+                    }
+                }    
+            }));
+
+            return{
+                ...baseState,
+                playlists: flattendPlaylists
             }
         }
         case ACTIONS.CREATE_PLAYLIST: {

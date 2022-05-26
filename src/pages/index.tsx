@@ -5,19 +5,36 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.scss'
 import CreatePlaylistModal from '../components/CreatePlaylistModal/CreatePlaylistModal';
-import { TAPISong, TSong } from '../app.types';
-import { cacheSongs } from '../actions/AppActions';
+import { TAPIPlaylistTracks, TAPIPlaylist, TAPISong, TSong } from '../app.types';
+import { cacheSongs, cachePlaylists } from '../actions/AppActions';
 import { getAllSongs } from '../selectors/songSelectors';
 import Sidebar from '../components/Sidebar/Sidebar';
 
-const Home: NextPage = ({ songsAPI }: any) => {
+interface HomeProps{
+  songsAPI: TAPISong[];
+  playlistsAPI: TAPIPlaylist[];
+  playlistTracksAPI: TAPIPlaylistTracks[];
+}
+
+const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
   const dispatch = useDispatch();
   const songs = useSelector(getAllSongs);
   const [openModalWithSong, setOpenModalWithSong] = useState<number | null>(null);
 
+  // Cache data from server on initial load
   useEffect(() => {
-    dispatch(cacheSongs(songsAPI));
+    songsAPI && dispatch(cacheSongs(songsAPI));
   }, [songsAPI])
+
+  console.log(songsAPI);
+  console.log(playlistsAPI);
+  console.log(playlistTracksAPI);
+
+  useEffect(() => {
+    if(playlistsAPI && playlistTracksAPI){
+      dispatch(cachePlaylists(playlistsAPI, playlistTracksAPI));
+    }
+  }, [playlistsAPI, playlistTracksAPI])
 
   return (
     <div className={styles.container}>
@@ -59,12 +76,18 @@ const Home: NextPage = ({ songsAPI }: any) => {
 
 export async function getServerSideProps() {
   // Fetch data from API
-  const res = await fetch(`http://localhost:8000/tracks`);
-  const raw = await res.json();
-  const songsAPI: TAPISong[] = raw.data;
+  const songsRes = await fetch(`http://localhost:8000/tracks`);
+  const songsRaw = await songsRes.json();
+  const songsAPI: TAPISong[] = songsRaw.data;
+
+
+  const playlistsRes = await fetch(`http://localhost:8000/playlist`);
+  const playlistsRaw = await playlistsRes.json();
+  const playlistsAPI: TAPIPlaylist[] = playlistsRaw.data.playlists;
+  const playlistTracksAPI: TAPIPlaylistTracks[] = playlistsRaw.data.playlistTracks;
 
   // Pass data to the page via props
-  return { props: { songsAPI } }
+  return { props: { songsAPI, playlistsAPI, playlistTracksAPI } }
 }
 
 export default Home
