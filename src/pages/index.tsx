@@ -1,17 +1,17 @@
-import type { NextPage } from 'next'
+import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppReducerState } from '../reducers/AppReducer';
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.scss'
-import CreatePlaylistModal from '../components/CreatePlaylistModal/CreatePlaylistModal';
+import styles from '../styles/Home.module.scss';
 import { TAPIPlaylistTracks, TAPIPlaylist, TAPISong, TSong } from '../app.types';
 import { cacheSongs, cachePlaylists } from '../actions/AppActions';
 import Sidebar from '../components/Sidebar/Sidebar';
 import SongList from '../components/SongList/SongList';
 import { getAllSongs, getSongsIdsFromPlaylistId } from '../selectors/songSelectors';
 import { getCurrentMeta } from '../selectors/playlistSelectors';
+
+import { Canvas } from "@react-three/fiber";
+import BackgroundBox from '../components/BackgroundBox/BackgroundBox';
 
 interface HomeProps{
   songsAPI: TAPISong[];
@@ -64,7 +64,16 @@ const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
             </nav>
             <SongList activePlaylist={activePlaylist} songIds={songIds as number[]}/>
           </main>
-      
+
+          <div className={styles.canvas}>
+          <Canvas linear camera={{position: [0,0, -20]}}>
+            <ambientLight />
+            <BackgroundBox 
+              color={'orange'}
+              size={[20, 3, 2]}
+              position={[15, 0, 0]} />
+            </Canvas>
+          </div>
     </div>
   )
 }

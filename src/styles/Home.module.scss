@@ -26,9 +26,19 @@
 .main{
   display: flex;
   flex-direction: row;
+  z-index: 1;
 }
 
 .nav{
   width: 30%;
   margin-top: 6rem;
+}
+
+.canvas{
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
