@@ -27,7 +27,7 @@ export const createPlaylistMiddleware: Middleware = (store: any) => (next: Dispa
                     store.dispatch(addTrackToPlaylist(resp.data.playlistId, initialTrackId));
                 }
             }
-        }catch(e){
+        }catch(e: unknown){
             console.error(e);
         }
     }
@@ -49,7 +49,7 @@ export const addTrackToPlaylistMiddleware: Middleware = (store: any) => (next: D
                 // add playlist to local cache
                 store.dispatch(updatePlaylistWithNewTrack(playlistId, trackId));
             }
-        }catch(e){
+        }catch(e: unknown){
             console.error(e);
         }
     }
@@ -71,7 +71,7 @@ export const removeTrackFromPlaylistMiddleware: Middleware = (store: any) => (ne
                 // add playlist to local cache
                 store.dispatch(removeTrackFromPlaylistCache(playlistId, trackId));
             }
-        }catch(e){
+        }catch(e: unknown){
             console.error(e);
         }
     }
@@ -86,7 +86,7 @@ export const deletePlaylistMiddleware: Middleware = (store: any) => (next: Dispa
             await axios.post(`${url}/playlist/delete-playlist`, {
                 playlistId
             });
-        }catch(e){
+        }catch(e: unknown){
             console.error(e);
         }
     }
