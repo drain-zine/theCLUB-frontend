@@ -39,3 +39,7 @@ export const removeTrackFromPlaylistCache = (playlistId: number, trackId: number
 export const updatePlaylistWithNewTrack = (playlistId: number, trackId: number) => {
     return { type: ACTIONS.UPDATE_PLAYLIST_WITH_NEW_TRACK, playlistId, trackId };
 };
+
+export const deletePlaylist = (playlistId: number) => {
+    return { type: ACTIONS.DELETE_PLAYLIST, playlistId };
+}

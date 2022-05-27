@@ -73,3 +73,18 @@ export const removeTrackFromPlaylistMiddleware: Middleware = (store: any) => (ne
         }
     }
 };
+
+export const deletePlaylistMiddleware: Middleware = (store: any) => (next: Dispatch<AnyAction>) => async(action: AnyAction) => {
+    next(action);
+    if(action.type === ACTIONS.DELETE_PLAYLIST){
+        const { playlistId } = action;
+
+        try{
+            await axios.post('http://localhost:8000/playlist/delete-playlist', {
+                playlistId
+            });
+        }catch(e){
+            console.error(e);
+        }
+    }
+};

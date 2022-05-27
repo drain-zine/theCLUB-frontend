@@ -1,10 +1,10 @@
 import type { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppReducerState } from '../reducers/AppReducer';
 import styles from '../styles/Home.module.scss';
-import { TAPIPlaylistTracks, TAPIPlaylist, TAPISong, TSong } from '../app.types';
-import { cacheSongs, cachePlaylists } from '../actions/AppActions';
+import { TAPIPlaylistTracks, TAPIPlaylist, TAPISong } from '../app.types';
+import { cacheSongs, cachePlaylists, deletePlaylist } from '../actions/AppActions';
 import Sidebar from '../components/Sidebar/Sidebar';
 import SongList from '../components/SongList/SongList';
 import { getAllSongs, getSongsIdsFromPlaylistId } from '../selectors/songSelectors';
@@ -35,6 +35,11 @@ const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
         getCurrentMeta(state, activePlaylist)
   );
   
+  const handleDelete = useCallback(() => {
+    dispatch(deletePlaylist(activePlaylist));
+    setActivePlaylist(prev => Math.max(0, prev - 1));
+  }, [activePlaylist]);
+
   const loaded = songsAPI !== undefined 
     && playlistsAPI !== undefined 
     && playlistTracksAPI !== undefined;
@@ -56,6 +61,7 @@ const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
           <header className={styles.header}>
             <h3>{currentMeta.name}</h3>
             <p>{currentMeta.description}</p>
+            <div onClick={() => handleDelete()} className={styles.delete}><p>delete</p></div>
           </header>
     
           <main className={styles.main}> 

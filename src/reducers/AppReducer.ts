@@ -119,6 +119,18 @@ const AppReducer = (baseState = {} as AppReducerState, action: AnyAction): AppRe
             };
         }
 
+        case ACTIONS.DELETE_PLAYLIST: {
+            const { playlistId } = action;
+            const playlists = baseState.playlists;
+            delete playlists[playlistId];
+
+
+            return {
+                ...baseState,
+                playlists
+            }
+        }
+
         default:
             return baseState;
     }

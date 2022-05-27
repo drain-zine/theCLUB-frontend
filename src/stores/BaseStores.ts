@@ -1,5 +1,5 @@
 import { createStore, compose, applyMiddleware } from 'redux'
-import { createPlaylistMiddleware, addTrackToPlaylistMiddleware, removeTrackFromPlaylistMiddleware } from '../middlewares/playlistMiddlewares';
+import { createPlaylistMiddleware, addTrackToPlaylistMiddleware, removeTrackFromPlaylistMiddleware, deletePlaylistMiddleware } from '../middlewares/playlistMiddlewares';
 import AppReducer from '../reducers/AppReducer';
 
 // ---Redux DevTools
@@ -9,7 +9,7 @@ if (typeof window !== 'undefined') {
 }
 
 const store = createStore(AppReducer, composeEnhancers(
-    applyMiddleware(createPlaylistMiddleware, addTrackToPlaylistMiddleware, removeTrackFromPlaylistMiddleware)
+    applyMiddleware(createPlaylistMiddleware, addTrackToPlaylistMiddleware, removeTrackFromPlaylistMiddleware, deletePlaylistMiddleware)
 ));
 
 export default store;
