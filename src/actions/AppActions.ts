@@ -17,13 +17,22 @@ export const createPlaylist = (meta: TPlaylistMeta, initialTrackId: number) => {
 };
 
 // action creator to recieve response from server of playlist creation action
-export const recievePlaylist = (playlistId: number, meta: TPlaylistMeta, creationDate: number) => {
+export const recievePlaylist = (playlistId: number, meta: TPlaylistMeta, creationDate: string) => {
     return { type: ACTIONS.RECIEVE_PLAYLIST, playlistId, meta, creationDate };
 };
 
 // action creator to add a track to a playlist
 export const addTrackToPlaylist = (playlistId: number, trackId: number) => {
     return { type: ACTIONS.ADD_TRACK_TO_PLAYLIST, playlistId, trackId };
+};
+
+// action creator to add a track to a playlist
+export const removeTrackFromPlaylist = (playlistId: number, trackId: number) => {
+    return { type: ACTIONS.REMOVE_TRACK_FROM_PLAYLIST, playlistId, trackId };
+};
+
+export const removeTrackFromPlaylistCache = (playlistId: number, trackId: number) => {
+    return { type: ACTIONS.REMOVE_TRACK_FROM_PLAYLIST_CACHE, playlistId, trackId };
 };
 
 // action creator to recieve response after adding track to playlist

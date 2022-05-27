@@ -1,14 +1,17 @@
 import type { NextPage } from 'next'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { AppReducerState } from '../reducers/AppReducer';
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.scss'
 import CreatePlaylistModal from '../components/CreatePlaylistModal/CreatePlaylistModal';
 import { TAPIPlaylistTracks, TAPIPlaylist, TAPISong, TSong } from '../app.types';
 import { cacheSongs, cachePlaylists } from '../actions/AppActions';
-import { getAllSongs } from '../selectors/songSelectors';
 import Sidebar from '../components/Sidebar/Sidebar';
+import SongList from '../components/SongList/SongList';
+import { getAllSongs, getSongsIdsFromPlaylistId } from '../selectors/songSelectors';
+import { getCurrentMeta } from '../selectors/playlistSelectors';
 
 interface HomeProps{
   songsAPI: TAPISong[];
@@ -18,17 +21,29 @@ interface HomeProps{
 
 const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
   const dispatch = useDispatch();
-  const songs = useSelector(getAllSongs);
-  const [openModalWithSong, setOpenModalWithSong] = useState<number | null>(null);
+  const [activePlaylist, setActivePlaylist] = useState(3); // set with playlistId. As database indexes from 1 we will use 0 for all songs
+  
+  const songIds = useSelector((state: AppReducerState) =>
+    activePlaylist === 0 ? 
+      getAllSongs(state) : 
+      getSongsIdsFromPlaylistId(state, activePlaylist
+  )) || [];
+
+  const currentMeta = useSelector((state: AppReducerState) => 
+        activePlaylist === 0 ?
+        { name: 'My Songs', description: 'All my downloaded songs'} :
+        getCurrentMeta(state, activePlaylist)
+  );
+  
+  const loaded = songsAPI !== undefined 
+    && playlistsAPI !== undefined 
+    && playlistTracksAPI !== undefined;
+
 
   // Cache data from server on initial load
   useEffect(() => {
     songsAPI && dispatch(cacheSongs(songsAPI));
   }, [songsAPI])
-
-  console.log(songsAPI);
-  console.log(playlistsAPI);
-  console.log(playlistTracksAPI);
 
   useEffect(() => {
     if(playlistsAPI && playlistTracksAPI){
@@ -38,38 +53,18 @@ const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
 
   return (
     <div className={styles.container}>
-      <nav>
-        <Sidebar/>
-      </nav>
-      <main className={styles.main}> 
-      { openModalWithSong !== null && <CreatePlaylistModal onClose={() => setOpenModalWithSong(null)} initialTrackId={openModalWithSong}/>}
-
-      {songs ? (
-        <table>
-          <tr>
-            <th>Song</th>
-            <th>Album</th>
-          </tr>
-        
-          {
-            Object.keys(songs).map((stringId: string) => {
-              const id: number = parseInt(stringId);
-              const song: TSong = songs[id];
-              return (
-                <tr key={id}>
-                  <td>{song.name}</td>
-                  <td>{song.album.name}</td>
-                  <td onClick={() => setOpenModalWithSong(id)}>Click me</td>
-                </tr>
-              );
-            })
-          }
-      </table>  ) :
-        <p>Hello wlrd!</p> }
-      </main>
-
-      <footer className={styles.footer}>
-      </footer>
+          <header className={styles.header}>
+            <h3>{currentMeta.name}</h3>
+            <p>{currentMeta.description}</p>
+          </header>
+    
+          <main className={styles.main}> 
+            <nav className={styles.nav}>
+              <Sidebar setActivePlaylist={setActivePlaylist}/>
+            </nav>
+            <SongList activePlaylist={activePlaylist} songIds={songIds as number[]}/>
+          </main>
+      
     </div>
   )
 }
@@ -90,4 +85,4 @@ export async function getServerSideProps() {
   return { props: { songsAPI, playlistsAPI, playlistTracksAPI } }
 }
 
-export default Home
+export default Home;

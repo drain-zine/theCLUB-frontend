@@ -1,0 +1,37 @@
+@import '../../styles/variables';
+
+.container{
+    width: 40%;
+    border-left: 1px solid $primaryFont;
+    padding-left: 1.5rem;
+}
+
+.playlist{
+    font-size: 0.9rem;
+    margin: 0 0 0 5%;
+    height: 1.5rem;
+}
+
+.bigLink{
+    height: 2rem;
+    display: flex;
+    align-items: center;
+
+    
+    p{
+        margin: 0;
+    }
+}
+
+.header{
+    margin: 0;
+    font-size: 0.95rem;
+    margin: 0.75rem 0;
+}
+
+.link:hover{
+    cursor: pointer;
+    background-color: black;
+    border-radius: 5%;
+    padding-left: 0.5rem;
+}

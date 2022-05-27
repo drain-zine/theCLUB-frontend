@@ -80,6 +80,29 @@ const AppReducer = (baseState = {} as AppReducerState, action: AnyAction): AppRe
             return baseState;
         }
 
+        case ACTIONS.REMOVE_TRACK_FROM_PLAYLIST: {
+            return baseState;
+        }
+
+        case ACTIONS.REMOVE_TRACK_FROM_PLAYLIST_CACHE: {
+            const { playlistId, trackId } = action;
+            const prevTrackIds = baseState.playlists[playlistId].trackIds;
+            console.log(prevTrackIds);
+            console.log(trackId);
+            console.log( prevTrackIds.filter(t => t !== parseInt(trackId)));
+
+            return {
+                ...baseState,
+                playlists: {
+                    ...baseState.playlists,
+                    [playlistId]: {
+                        ...baseState.playlists[playlistId],
+                        trackIds: prevTrackIds.filter(t => t !== parseInt(trackId))
+                    }
+                }
+            }
+        }
+
         case ACTIONS.UPDATE_PLAYLIST_WITH_NEW_TRACK: {
             const { playlistId, trackId } = action;
             const prevTrackIds = baseState.playlists[playlistId].trackIds;
@@ -90,7 +113,7 @@ const AppReducer = (baseState = {} as AppReducerState, action: AnyAction): AppRe
                     ...baseState.playlists,
                     [playlistId]: {
                         ...baseState.playlists[playlistId],
-                        trackIds: [...prevTrackIds, trackId]
+                        trackIds: [...prevTrackIds, parseInt(trackId)]
                     }
                 }
             };

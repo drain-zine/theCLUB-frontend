@@ -13,6 +13,8 @@ const CreatePlaylistModal = ({ initialTrackId, onClose }: CreatePlaylistModalPro
     const modalRef = useRef<HTMLDivElement | null>(null)
     const dispatch = useDispatch();
 
+    console.log('hello!')
+
     const [formData, setFormData] = useState({
         name: '',
         description: ''
@@ -26,22 +28,23 @@ const CreatePlaylistModal = ({ initialTrackId, onClose }: CreatePlaylistModalPro
     }, [formData, setFormData]);
 
     // handle click outside modal
-    useOnClickOutside(modalRef, onClose);
+   useOnClickOutside(modalRef, onClose);
 
     const onSubmit = useCallback((e: FormEvent) => {
         e.preventDefault(); // prevent page refresh
+        console.log(initialTrackId);
         dispatch(createPlaylist(formData, initialTrackId));
         onClose();
     }, [formData, initialTrackId]);
 
     return(
-        <div ref={modalRef} className={styles.container}>
-            <form onSubmit={onSubmit}>
-              <label htmlFor="name">Name</label><br/>
-              <input type="text" id="name" name="name" onChange={handleInput} value={formData.name}/><br/>
-              <label htmlFor="name">Description</label><br/>
-              <input type="text" id="description" name="description" onChange={handleInput} value={formData.description}/><br/>
-              <button type="submit">Save</button>
+        <div onClick={e => e.stopPropagation()} ref={modalRef} className={styles.container}>
+            <form onClick={e => e.stopPropagation()} onSubmit={onSubmit}>
+              <label className={styles.label} htmlFor="name">Name</label><br/>
+              <input className={styles.input} type="text" id="name" name="name" onChange={handleInput} value={formData.name}/><br/>
+              <label className={styles.label} htmlFor="name">Description</label><br/>
+              <input className={`${styles.input} ${styles.desc}`} type="text" id="description" name="description" onChange={handleInput} value={formData.description}/><br/>
+              <button className={styles.button} type="submit">Save</button>
             </form>
         </div>
     );

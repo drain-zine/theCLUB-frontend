@@ -1,0 +1,15 @@
+@import '../../styles/variables.scss';
+
+.table{
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    height: fit-content;
+}
+
+.header{
+    border-bottom: 1px solid $primaryFont;
+    font-size: 0.75rem;
+    height: 15%;
+}
+
