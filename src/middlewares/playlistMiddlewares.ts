@@ -39,18 +39,22 @@ export const addTrackToPlaylistMiddleware: Middleware = (store: any) => (next: D
     if(action.type === ACTIONS.ADD_TRACK_TO_PLAYLIST){
         const { playlistId, trackId } = action;
 
-        try{
-            const resp = await axios.post(`${url}/playlist/add-track`, {
-                playlistId,
-                trackId: parseInt(trackId)
-            });
 
-            if(resp.data.success){
-                // add playlist to local cache
-                store.dispatch(updatePlaylistWithNewTrack(playlistId, trackId));
+        // Only add track if not on playlist already
+        if(!store.getState().playlists[playlistId].trackIds.includes(trackId)){
+            try{
+                const resp = await axios.post(`${url}/playlist/add-track`, {
+                    playlistId,
+                    trackId: parseInt(trackId)
+                });
+    
+                if(resp.data.success){
+                    // add playlist to local cache
+                    store.dispatch(updatePlaylistWithNewTrack(playlistId, trackId));
+                }
+            }catch(e: unknown){
+                console.error(e);
             }
-        }catch(e: unknown){
-            console.error(e);
         }
     }
 };
@@ -77,6 +81,7 @@ export const removeTrackFromPlaylistMiddleware: Middleware = (store: any) => (ne
     }
 };
 
+// Middleware to delete playlist
 export const deletePlaylistMiddleware: Middleware = (store: any) => (next: Dispatch<AnyAction>) => async(action: AnyAction) => {
     next(action);
     if(action.type === ACTIONS.DELETE_PLAYLIST){
