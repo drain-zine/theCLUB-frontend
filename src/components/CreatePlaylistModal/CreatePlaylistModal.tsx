@@ -35,7 +35,7 @@ const CreatePlaylistModal = ({ initialTrackId, onClose }: CreatePlaylistModalPro
         console.log(initialTrackId);
         dispatch(createPlaylist(formData, initialTrackId));
         onClose();
-    }, [formData, initialTrackId]);
+    }, [dispatch, formData, initialTrackId, onClose]);
 
     return(
         <div onClick={e => e.stopPropagation()} ref={modalRef} className={styles.container}>

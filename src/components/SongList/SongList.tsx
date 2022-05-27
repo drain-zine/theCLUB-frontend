@@ -34,6 +34,7 @@ const SongList = ({activePlaylist, songIds}: { activePlaylist: number, songIds: 
                 <tbody>
                     {filteredSongs.map((song: TSong, idx: number) => 
                         <Song
+                            key={songIds[idx]}
                             activePlaylist={activePlaylist}
                             id={songIds[idx]}
                             name={song.name}

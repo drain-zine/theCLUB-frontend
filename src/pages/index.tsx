@@ -38,7 +38,7 @@ const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
   const handleDelete = useCallback(() => {
     dispatch(deletePlaylist(activePlaylist));
     setActivePlaylist(prev => Math.max(0, prev - 1));
-  }, [activePlaylist]);
+  }, [dispatch, activePlaylist]);
 
   const loaded = songsAPI !== undefined 
     && playlistsAPI !== undefined 
@@ -48,13 +48,13 @@ const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
   // Cache data from server on initial load
   useEffect(() => {
     songsAPI && dispatch(cacheSongs(songsAPI));
-  }, [songsAPI])
+  }, [dispatch, songsAPI])
 
   useEffect(() => {
     if(playlistsAPI && playlistTracksAPI){
       dispatch(cachePlaylists(playlistsAPI, playlistTracksAPI));
     }
-  }, [playlistsAPI, playlistTracksAPI])
+  }, [dispatch, playlistsAPI, playlistTracksAPI])
 
   return (
     <div className={styles.container}>

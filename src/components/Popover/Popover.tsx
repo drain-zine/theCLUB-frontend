@@ -35,7 +35,7 @@ const Popover = ({initialTrackId, onClose}: PopoverProps) => {
                 {Object.keys(playlists).map((id: string) => {
                     const playlist = playlists[parseInt(id)];
                     return(
-                        <p onClick={() => dispatch(addTrackToPlaylist(parseInt(id), initialTrackId))}>{playlist.name}</p>
+                        <p key={id} onClick={() => dispatch(addTrackToPlaylist(parseInt(id), initialTrackId))}>{playlist.name}</p>
                     )
                 })}
             </div>
