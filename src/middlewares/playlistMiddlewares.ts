@@ -3,6 +3,9 @@ import { AnyAction, Dispatch, Middleware } from 'redux';
 import axios  from 'axios';
 import { addTrackToPlaylist, recievePlaylist, updatePlaylistWithNewTrack, removeTrackFromPlaylistCache } from '../actions/AppActions';
 
+
+const url = `${process.env.server}:${process.env.port}`;
+
 // Middleware to dispatch network request for creating playlist
 export const createPlaylistMiddleware: Middleware = (store: any) => (next: Dispatch<AnyAction>) => async(action: AnyAction) => {
     next(action);
@@ -10,7 +13,7 @@ export const createPlaylistMiddleware: Middleware = (store: any) => (next: Dispa
         const { meta, initialTrackId } = action;
 
         try{
-            const resp = await axios.post('http://localhost:8000/playlist/create', {
+            const resp = await axios.post(`${url}/playlist/create`, {
                 meta,
                 initialTrackId
             });
@@ -37,7 +40,7 @@ export const addTrackToPlaylistMiddleware: Middleware = (store: any) => (next: D
         const { playlistId, trackId } = action;
 
         try{
-            const resp = await axios.post('http://localhost:8000/playlist/add-track', {
+            const resp = await axios.post(`${url}/playlist/add-track`, {
                 playlistId,
                 trackId: parseInt(trackId)
             });
@@ -59,7 +62,7 @@ export const removeTrackFromPlaylistMiddleware: Middleware = (store: any) => (ne
         const { playlistId, trackId } = action;
 
         try{
-            const resp = await axios.post('http://localhost:8000/playlist/remove-track', {
+            const resp = await axios.post(`${url}/playlist/remove-track`, {
                 playlistId,
                 trackId
             });
@@ -80,7 +83,7 @@ export const deletePlaylistMiddleware: Middleware = (store: any) => (next: Dispa
         const { playlistId } = action;
 
         try{
-            await axios.post('http://localhost:8000/playlist/delete-playlist', {
+            await axios.post(`${url}/playlist/delete-playlist`, {
                 playlistId
             });
         }catch(e){
