@@ -20,9 +20,9 @@ describe('playlistMiddlewares', () => {
             expect(axios.post).not.toHaveBeenCalled();
         });
 
-        it('should handle a successful request',  () => {
+        it('should handle a successful request',  async() => {
             
-            deletePlaylistMiddleware({} as any)(nextSpy)({
+            await deletePlaylistMiddleware({} as any)(nextSpy)({
                 type: DELETE_PLAYLIST,
                 playlistId: 0
             });
@@ -32,14 +32,15 @@ describe('playlistMiddlewares', () => {
             });
         });
 
-        it('should handle a failed request', () => {
+        it('should handle a failed request', async() => {
+            const consoleSpy = jest.spyOn(global.console, 'error').mockImplementationOnce(() => {});
             (axios.post as jest.Mock).mockRejectedValue('oops');
-            deletePlaylistMiddleware({} as any)(nextSpy)({
+            await deletePlaylistMiddleware({} as any)(nextSpy)({
                 type: DELETE_PLAYLIST,
                 playlistId: 0
             });
             expect(nextSpy).toBeCalled();
-            expect(console.error).toHaveBeenCalled();
+            expect(consoleSpy).toHaveBeenCalled();
         });
     });
 });
