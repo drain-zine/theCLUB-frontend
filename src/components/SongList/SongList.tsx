@@ -34,9 +34,9 @@ const SongList = ({activePlaylist, songIds}: { activePlaylist: number, songIds: 
                 <tbody>
                     {filteredSongs.map((song: TSong, idx: number) => 
                         <Song
-                            key={songIds[idx]}
+                            key={idx}
                             activePlaylist={activePlaylist}
-                            id={songIds[idx]}
+                            id={songIds[songs.findIndex((usong: TSong) => usong.name === song.name)]} // nasty workaround of bug
                             name={song.name}
                             albumName={song.album.name}
                             artistName={song.album.artist.name}
