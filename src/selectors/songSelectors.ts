@@ -5,7 +5,7 @@ import { AppReducerState } from '../reducers/AppReducer';
 
 export const getAllSongs = createSelector([
         (state: AppReducerState) => state.songs
-    ], (songs: Record<number, TSong>) => Object.keys(songs));
+    ], (songs: Record<number, TSong>) => songs ? Object.keys(songs) : []);
 
 export const getSongsFromIds = createSelector([
     (state: AppReducerState) => state.songs,

@@ -21,13 +21,13 @@ interface HomeProps{
 
 const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
   const dispatch = useDispatch();
-  const [activePlaylist, setActivePlaylist] = useState(3); // set with playlistId. As database indexes from 1 we will use 0 for all songs
+  const [activePlaylist, setActivePlaylist] = useState(0); // set with playlistId. As database indexes from 1 we will use 0 for all songs
   
   const songIds = useSelector((state: AppReducerState) =>
     activePlaylist === 0 ? 
       getAllSongs(state) : 
-      getSongsIdsFromPlaylistId(state, activePlaylist
-  )) || [];
+      getSongsIdsFromPlaylistId(state, activePlaylist)
+  ) || [];
 
   const currentMeta = useSelector((state: AppReducerState) => 
         activePlaylist === 0 ?
@@ -61,7 +61,7 @@ const Home: NextPage = ({ songsAPI, playlistsAPI, playlistTracksAPI }: any) => {
           <header className={styles.header}>
             <h3>{currentMeta.name}</h3>
             <p>{currentMeta.description}</p>
-            <div onClick={() => handleDelete()} className={styles.delete}><p>delete</p></div>
+            {activePlaylist !== 0 && <div onClick={() => handleDelete()} className={styles.delete}><p>delete</p></div> }
           </header>
     
           <main className={styles.main}> 
